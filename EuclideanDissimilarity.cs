@@ -1,6 +1,6 @@
 ﻿/*
  * Created by: Miguel Angel Medina Pérez (miguelmedinaperez@gmail.com)
- * Created: 05/18/2017
+ * Created: 05/18/2007
  * Comments by: Miguel Angel Medina Pérez (miguelmedinaperez@gmail.com)
  */
 
@@ -19,10 +19,13 @@ namespace PRFramework.Core.ComparisonFunctions
     ///     <para>
     ///         The constructor of the class requires a delegate <see cref="GetComponent{IVector}"/> to provide the values of the components of the vectors.
     ///     </para>
+    ///     <para>
+    ///         Las diferencias entre los valores de un componente se normalizan por la diferencia del valor máximo menos el valor mínimo de dicho componente.
+    ///     </para>
     /// </remarks>
     /// <typeparam name="IVector">A type of vector.</typeparam>
     [Serializable]
-    public class EuclideanDissimilarity : IDissimilarityFunction<Instance>
+    public class EuclideanDissimilarity
     {
         public EuclideanDissimilarity(IEnumerable<Instance> instances, InstanceModel model)
         {
@@ -94,6 +97,21 @@ namespace PRFramework.Core.ComparisonFunctions
 
             _maxDissimilarity = Math.Sqrt(validFeaturesCount);
         }
+
+        //public static List<NormalizedEuclideanDistance> CreateDistances(IList<Instance> instances,
+        //    IEnumerable<IList<Feature>> collectionOfFeaturesCollections, InstanceModel model)
+        //{
+        //    if (collectionOfFeaturesCollections == null)
+        //        throw new ArgumentNullException(nameof(collectionOfFeaturesCollections), $"Unable to instantiate ${nameof(NormalizedEuclideanDistance)}: null collection of features collections.");
+
+        //    var distancesList = new List<NormalizedEuclideanDistance>();
+        //    foreach (var featuresCollection in collectionOfFeaturesCollections)
+        //        distancesList.Add(distancesList.Count == 0
+        //            ? new NormalizedEuclideanDistance(instances, featuresCollection, model)
+        //            : new NormalizedEuclideanDistance(distancesList[0]._maxLessMin, featuresCollection, model));
+
+        //    return distancesList;
+        //}
 
         public double Compare(Instance source, Instance compareTo)
         {

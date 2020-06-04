@@ -1,32 +1,30 @@
 ﻿/*
  * Created by: Miguel Angel Medina Pérez (miguelmedinaperez@gmail.com)
- * Created: 11/16/2018
+ * Created: 11/16/2017
  * Comments by: Miguel Angel Medina Pérez (miguelmedinaperez@gmail.com)
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using PRFramework.Core.Clustering;
 using PRFramework.Core.Common;
 using PRFramework.Core.ComparisonFunctions;
 using PRFramework.Core.Samplers;
 using PRFramework.Core.SupervisedClassifiers;
-using PRFramework.Core.Vector;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PRFramework.MigueExperimenter.AnomalyDetection
 {
-    public class BaggingRandomMiner : ISupervisedClassifier
+    public class BaggingRandomMiner
     {
         public int ClassifierCount { set; get; } = 100;
 
-        public int BootstrapSamplePercent { set; get; } = 100;
+        public int BootstrapSamplePercent { set; get; } = 1;
 
         public bool UseBootstrapSampleCount { set; get; } = false;
 
         public int BootstrapSampleCount { set; get; } = 0;
 
-        public bool UsePastEvenQueue { set; get; } = false;
+        public bool UsePastEvenQueue { set; get; } = true;
 
         public double[] Classify(Instance instance)
         {
@@ -92,18 +90,18 @@ namespace PRFramework.MigueExperimenter.AnomalyDetection
 
                 _centers[i] = randomSampler.GetSample(dataset, sampleSize);
 
-                _sd[i] = ComputeBeta(_centers[i].ToList(), _distance);
+                _sd[i] = ComputeBeta(_centers[i].ToList());
             }
         }
 
-        private double ComputeBeta(List<Instance> prObjectVectorsList, IDissimilarityFunction<Instance> distance)
+        private double ComputeBeta(List<Instance> prObjectVectorsList)
         {
             double sum = 0;
             int count = 0;
             for (int i = 0; i < prObjectVectorsList.Count - 1; i++)
                 for (int j = i + 1; j < prObjectVectorsList.Count; j++)
                 {
-                    sum += distance.Compare(prObjectVectorsList[i], prObjectVectorsList[j]);
+                    sum += _distance.Compare(prObjectVectorsList[i], prObjectVectorsList[j]);
                     count++;
                 }
 
